@@ -1,0 +1,42 @@
+# CI Workflow to build Java Project.
+
+name: BFLC - CI
+
+on:
+  push:
+    branches: [ "feature/BFLC-service" ]
+  pull_request:
+    branches: [ "feature/BFLC-service" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout code.
+      - name: ✔️ Checkout code
+        uses: actions/checkout@v4
+
+      # Set up Maven and JDK.
+      - name: 🛠️ Set up Maven and JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '23'
+          distribution: 'temurin'
+          cache: maven
+
+      # Check Java installation.
+      - name: ☕ Check Java installation
+        run: |
+          java --version
+          mvn --version
+
+      # Clean with Maven.
+      - name: 🧹 Clean with Maven
+        run: |
+          mvn clean install
+
+      # Build with Maven.
+      - name: 👷 Build with Maven
+        run: |
+          mvn -B package --file pom.xml
