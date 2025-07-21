@@ -33,7 +33,7 @@ public class LiveUpdateMapper {
     public static LiveUpdateEntity liveUpdateModelToLiveUpdateEntity(LiveUpdateModel liveUpdateModel) {
         LiveUpdateEntity liveUpdateEntity = new LiveUpdateEntity();
         liveUpdateEntity.setTimestamp(liveUpdateModel.timestamp());
-        liveUpdateEntity.setDriverUuid(liveUpdateModel.driverId());
+        liveUpdateEntity.setDriverUuid(liveUpdateModel.driverUuid());
         liveUpdateEntity.setDriverStatus(liveUpdateModel.driverStatus());
         liveUpdateEntity.setLocation(liveUpdateModel.location());
         liveUpdateEntity.setSpeed(liveUpdateEntity.getSpeed());

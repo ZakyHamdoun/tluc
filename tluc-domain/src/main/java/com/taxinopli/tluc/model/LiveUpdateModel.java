@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public record LiveUpdateModel(
     Instant timestamp,
-    UUID driverId,
+    UUID driverUuid,
     DriverStatus driverStatus,
     Point location,
     Double speed
