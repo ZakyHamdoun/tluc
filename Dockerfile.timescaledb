@@ -1,0 +1,24 @@
+# Custom TimescaleDB with PostGIS
+FROM timescale/timescaledb:latest-pg16
+
+# Install PostGIS and related packages for Alpine (PostgreSQL 16)
+RUN apk add --no-cache \
+    postgis \
+    postgresql16-contrib \
+    && find /usr -name "*postgis*" -path "*postgresql16*" 2>/dev/null | head -5 \
+    && find /usr -name "*.control" 2>/dev/null | grep -E "(postgis|pg16)" | head -5
+
+# Set up the database to preload both TimescaleDB and PostGIS
+RUN echo "shared_preload_libraries = 'timescaledb'" >> /usr/local/share/postgresql/postgresql.conf.sample
+
+# Create a script to set up both TimescaleDB and PostGIS
+RUN echo '#!/bin/bash' > /docker-entrypoint-initdb.d/00-setup-extensions.sh \
+    && echo 'psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL' >> /docker-entrypoint-initdb.d/00-setup-extensions.sh \
+    && echo '    CREATE EXTENSION IF NOT EXISTS timescaledb;' >> /docker-entrypoint-initdb.d/00-setup-extensions.sh \
+    && echo '    CREATE EXTENSION IF NOT EXISTS postgis;' >> /docker-entrypoint-initdb.d/00-setup-extensions.sh \
+    && echo '    CREATE EXTENSION IF NOT EXISTS postgis_topology;' >> /docker-entrypoint-initdb.d/00-setup-extensions.sh \
+    && echo 'EOSQL' >> /docker-entrypoint-initdb.d/00-setup-extensions.sh \
+    && chmod +x /docker-entrypoint-initdb.d/00-setup-extensions.sh
+
+# Expose the PostgreSQL port
+EXPOSE 5432

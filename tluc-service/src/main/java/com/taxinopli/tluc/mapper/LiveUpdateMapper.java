@@ -5,7 +5,6 @@ import com.taxinopli.tluc.entity.LiveUpdateEntity;
 import com.taxinopli.tluc.geometry.GeometryUtils;
 import com.taxinopli.tluc.model.LiveUpdateModel;
 import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Component;
 
@@ -15,17 +14,17 @@ public class LiveUpdateMapper {
     }
 
     public static LiveUpdateModel liveUpdateRequestDtoToLiveUpdateModel(LiveUpdateRequestDto liveUpdateRequestDto) {
-        GeometryFactory geometryFactory = GeometryUtils.GEOMETRY_FACTORY;
-        Point liveUpdateLocation = geometryFactory.createPoint(new Coordinate(
-                liveUpdateRequestDto.getLatitude(),
-                liveUpdateRequestDto.getLongitude()
+        Point location = GeometryUtils.GEOMETRY_FACTORY.createPoint(new Coordinate(
+                liveUpdateRequestDto.getLongitude(), // Note: longitude first for JTS
+                liveUpdateRequestDto.getLatitude()
         ));
+        location.setSRID(4326); // Set SRID for geographic coordinates
 
         return new LiveUpdateModel(
                 liveUpdateRequestDto.getTimestamp(),
                 liveUpdateRequestDto.getDriverUuid(),
                 liveUpdateRequestDto.getDriverStatus(),
-                liveUpdateLocation,
+                location,
                 liveUpdateRequestDto.getSpeed()
         );
     }
@@ -36,7 +35,7 @@ public class LiveUpdateMapper {
         liveUpdateEntity.setDriverUuid(liveUpdateModel.driverUuid());
         liveUpdateEntity.setDriverStatus(liveUpdateModel.driverStatus());
         liveUpdateEntity.setLocation(liveUpdateModel.location());
-        liveUpdateEntity.setSpeed(liveUpdateEntity.getSpeed());
+        liveUpdateEntity.setSpeed(liveUpdateModel.speed());
 
         return liveUpdateEntity;
     }
@@ -49,5 +48,20 @@ public class LiveUpdateMapper {
                 liveUpdateEntity.getLocation(),
                 liveUpdateEntity.getSpeed()
         );
+    }
+
+    /**
+     * Convert Object[] from native queries to LiveUpdateEntity
+     * Used for PostGIS function results
+     */
+    public static LiveUpdateEntity objectArrayToLiveUpdateEntity(Object[] row) {
+        LiveUpdateEntity entity = new LiveUpdateEntity();
+        entity.setId((Long) row[0]);
+        entity.setTimestamp((java.time.Instant) row[1]);
+        entity.setDriverUuid((java.util.UUID) row[2]);
+        entity.setDriverStatus(com.taxinopli.tluc.enumeration.DriverStatus.valueOf((String) row[3]));
+        entity.setLocation((Point) row[4]);
+        entity.setSpeed((Double) row[5]);
+        return entity;
     }
 }

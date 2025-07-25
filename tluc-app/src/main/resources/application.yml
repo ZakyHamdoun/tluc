@@ -3,7 +3,7 @@ spring:
     name: tluc-realtime-service
   
   datasource:
-    url: jdbc:postgresql://localhost:5432/tluc_timescale
+    url: jdbc:postgresql://localhost:5433/tluc_timescale
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
@@ -34,14 +34,16 @@ spring:
       linger-ms: 1
       buffer-memory: 33554432
     consumer:
-      group-id: realtime-consumer-group
-      auto-offset-reset: earliest
+      bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+      group-id: tluc-live-update-group
+      auto-offset-reset: latest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        spring.json.trusted.packages: com.taxinopli.tluc.dto
-        spring.json.use.type.headers: false
-        spring.json.value.default.type: com.taxinopli.tluc.dto.RealtimeRequestDto
+        spring.json.trusted.packages: "com.taxinopli.tluc.dto"
+        spring.json.type.mapping: "LiveUpdateRequestDto:com.taxinopli.tluc.dto.LiveUpdateRequestDto"
+      enable-auto-commit: false
+      max-poll-records: 500
 
 server:
   port: 8080
@@ -60,4 +62,4 @@ management:
         include: health,info,metrics,prometheus
   endpoint:
     health:
-      show-details: always 
+      show-details: always

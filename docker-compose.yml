@@ -40,18 +40,19 @@ services:
 
   # TimescaleDB with PostGIS
   timescaledb:
-    image: timescale/timescaledb:latest-pg14
+    build:
+      context: .
+      dockerfile: Dockerfile.timescaledb
     container_name: timescaledb
     environment:
       POSTGRES_DB: tluc_timescale
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - timescaledb-data:/var/lib/postgresql/data
-      - ./tluc-app/src/main/resources/db/init-timescale.sql:/docker-entrypoint-initdb.d/init-timescale.sql
-    command: ["postgres", "-c", "shared_preload_libraries=timescaledb,postgis"]
+      - ./tluc-app/src/main/resources/db/init-postgis.sql:/docker-entrypoint-initdb.d/01-init-postgis.sql
 
   # Kafka UI (optional, for monitoring)
   kafka-ui:
@@ -87,4 +88,4 @@ volumes:
   zookeeper-data:
   zookeeper-logs:
   kafka-data:
-  timescaledb-data: 
+  timescaledb-data:  

@@ -1,8 +1,5 @@
 package com.taxinopli.tluc.constant;
 
-import org.springframework.stereotype.Component;
-
-@Component
 public class ResponseStatusHttp {
     private ResponseStatusHttp() {
         throw new IllegalStateException("Utility class");
