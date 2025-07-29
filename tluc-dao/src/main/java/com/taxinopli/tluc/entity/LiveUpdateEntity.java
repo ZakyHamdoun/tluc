@@ -6,7 +6,6 @@ import lombok.*;
 import org.locationtech.jts.geom.Point;
 
 import java.time.Instant;
-import java.util.UUID;
 
 @Entity
 @Table(name = "live_updates", schema = "tluc")
@@ -23,8 +22,8 @@ public final class LiveUpdateEntity {
     @Column(name = "timestamp", nullable = false, columnDefinition = "TIMESTAMPTZ")
     private Instant timestamp;
 
-    @Column(name = "driver_uuid", nullable = false)
-    private UUID driverUuid;
+    @Column(name = "driver_id", nullable = false)
+    private Long driverId;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "driver_status", nullable = false)

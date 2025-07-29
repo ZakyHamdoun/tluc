@@ -2,14 +2,12 @@ package com.taxinopli.tluc.dto;
 
 import com.taxinopli.tluc.enumeration.DriverStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 
 import java.time.Instant;
-import java.util.UUID;
 
 @Data
 @Schema(description = "A live update.", name = "LiveUpdateInput")
@@ -22,9 +20,9 @@ public class LiveUpdateRequestDto {
 
     @Schema(description = "Live update's corresponding driver's UUID.",
             requiredMode = Schema.RequiredMode.REQUIRED,
-            example = "550e8400-e29b-41d4-a716-446655440000")
-    @NotNull(message = "driverUuid is required.")
-    private UUID driverUuid;
+            example = "22555")
+    @NotNull(message = "driverId is required.")
+    private Long driverId;
 
     @Schema(description = "Live update's corresponding driver's status.",
             requiredMode = Schema.RequiredMode.REQUIRED,
@@ -32,21 +30,13 @@ public class LiveUpdateRequestDto {
     @NotNull(message = "driverStatus is required")
     private DriverStatus driverStatus;
 
-    @Schema(description = "Live update's latitude.",
+    @Schema(description = "Live update's coordinate.",
             requiredMode = Schema.RequiredMode.REQUIRED,
-            example = "48.8583764")
-    @NotNull(message = "latitude is required.")
-    @DecimalMin(value = "-90.0", message = "latitude must be >= -90.0")
-    @DecimalMax(value = "90.0", message = "latitude must be <= 90.0")
-    private Double latitude;
-
-    @Schema(description = "Live update's longitude.",
-            requiredMode = Schema.RequiredMode.REQUIRED,
-            example = "2.2120929")
-    @NotNull(message = "longitude is required.")
-    @DecimalMin(value = "-180.0", message = "longitude must be >= -180.0")
-    @DecimalMax(value = "180.0", message = "longitude must be <= 180.0")
-    private Double longitude;
+            example = """
+                    {"longitude": 2.2120929, "latitude": 48.8583764}
+                    """)
+    @NotNull(message = "coordinate is required.")
+    private @Valid CoordinateDto coordinate;
 
     @Schema(description = "Live update's speed (km/h).",
             requiredMode = Schema.RequiredMode.REQUIRED,

@@ -11,18 +11,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class LiveUpdateMapper {
     private LiveUpdateMapper() {
+
     }
 
     public static LiveUpdateModel liveUpdateRequestDtoToLiveUpdateModel(LiveUpdateRequestDto liveUpdateRequestDto) {
+        // Coordinate constructor takes X (longitude) first, then Y (latitude).
         Point location = GeometryUtils.GEOMETRY_FACTORY.createPoint(new Coordinate(
-                liveUpdateRequestDto.getLongitude(), // Note: longitude first for JTS
-                liveUpdateRequestDto.getLatitude()
+                liveUpdateRequestDto.getCoordinate().getLongitude(),
+                liveUpdateRequestDto.getCoordinate().getLatitude()
         ));
-        location.setSRID(4326); // Set SRID for geographic coordinates
 
         return new LiveUpdateModel(
                 liveUpdateRequestDto.getTimestamp(),
-                liveUpdateRequestDto.getDriverUuid(),
+                liveUpdateRequestDto.getDriverId(),
                 liveUpdateRequestDto.getDriverStatus(),
                 location,
                 liveUpdateRequestDto.getSpeed()
@@ -32,22 +33,12 @@ public class LiveUpdateMapper {
     public static LiveUpdateEntity liveUpdateModelToLiveUpdateEntity(LiveUpdateModel liveUpdateModel) {
         LiveUpdateEntity liveUpdateEntity = new LiveUpdateEntity();
         liveUpdateEntity.setTimestamp(liveUpdateModel.timestamp());
-        liveUpdateEntity.setDriverUuid(liveUpdateModel.driverUuid());
+        liveUpdateEntity.setDriverId(liveUpdateModel.driverId());
         liveUpdateEntity.setDriverStatus(liveUpdateModel.driverStatus());
         liveUpdateEntity.setLocation(liveUpdateModel.location());
         liveUpdateEntity.setSpeed(liveUpdateModel.speed());
 
         return liveUpdateEntity;
-    }
-
-    public static LiveUpdateModel liveUpdateEntityToLiveUpdateModel(LiveUpdateEntity liveUpdateEntity) {
-        return new LiveUpdateModel(
-                liveUpdateEntity.getTimestamp(),
-                liveUpdateEntity.getDriverUuid(),
-                liveUpdateEntity.getDriverStatus(),
-                liveUpdateEntity.getLocation(),
-                liveUpdateEntity.getSpeed()
-        );
     }
 
     /**
@@ -58,7 +49,7 @@ public class LiveUpdateMapper {
         LiveUpdateEntity entity = new LiveUpdateEntity();
         entity.setId((Long) row[0]);
         entity.setTimestamp((java.time.Instant) row[1]);
-        entity.setDriverUuid((java.util.UUID) row[2]);
+        entity.setDriverId((Long) row[2]);
         entity.setDriverStatus(com.taxinopli.tluc.enumeration.DriverStatus.valueOf((String) row[3]));
         entity.setLocation((Point) row[4]);
         entity.setSpeed((Double) row[5]);

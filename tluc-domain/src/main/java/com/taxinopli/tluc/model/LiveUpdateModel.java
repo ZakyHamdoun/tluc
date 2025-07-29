@@ -4,20 +4,11 @@ import com.taxinopli.tluc.enumeration.DriverStatus;
 import org.locationtech.jts.geom.Point;
 
 import java.time.Instant;
-import java.util.UUID;
 
 public record LiveUpdateModel(
         Instant timestamp,
-        UUID driverUuid,
+        Long driverId,
         DriverStatus driverStatus,
         Point location,
         Double speed
-) {
-    public double latitude() {
-        return location.getY();
-    }
-    
-    public double longitude() {
-        return location.getX();
-    }
-}
+) {}

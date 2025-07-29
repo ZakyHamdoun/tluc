@@ -1,0 +1,53 @@
+package com.taxinopli.tluc.dto;
+
+import com.taxinopli.tluc.enumeration.DriverStatus;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+import lombok.Data;
+
+@Data
+@Schema(description = "A request for nearby drivers location update.", name = "NearbyDriversInput")
+public class NearbyDriversByPointRequestDto {
+    @Schema(description = "Center's coordinate.",
+            requiredMode = Schema.RequiredMode.REQUIRED,
+            example = "{2.2120929, 48.8583764}")
+    @NotNull(message = "coordinate is required.")
+    private @Valid CoordinateDto coordinate;
+
+    @Schema(description = "Radius (m).",
+            requiredMode = Schema.RequiredMode.REQUIRED,
+            example = "3000")
+    @NotNull(message = "radius is required.")
+    @DecimalMin(value = "1", message = "radius must be >= 1")
+    @DecimalMax(value = "5000", message = "radius must be <= 5000")
+    private double radius;
+
+    @Schema(description = "Maximum Age (min).",
+            requiredMode = Schema.RequiredMode.REQUIRED,
+            example = "5")
+    @NotNull(message = "maximum age is required.")
+    @DecimalMin(value = "1", message = "maximum age must be >= 1")
+    @DecimalMax(value = "1440", message = "maximum age must be <= 1440")
+    private double maximumAge;
+
+    @Schema(description = "Filter by driver status.",
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED,
+            example = "OCCUPIED")
+    private DriverStatus driverStatus;
+
+    @Schema(description = "Filter by minimum speed (km/h).",
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED,
+            example = "30")
+    @PositiveOrZero(message = "minSpeed must be either zero, positive or null")
+    private Double minSpeed;
+
+    @Schema(description = "Filter by maximum speed (km/h).",
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED,
+            example = "30")
+    @PositiveOrZero(message = "maxSpeed must be either zero, positive or null")
+    private Double maxSpeed;
+}
