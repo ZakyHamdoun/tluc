@@ -16,7 +16,8 @@ public class LocationMapper {
     }
 
     public static LocationEntity liveUpdateEntityToLocationEntity(LiveUpdateEntity liveUpdateEntity) {
-        return new LocationEntity(liveUpdateEntity.getDriverId(), liveUpdateEntity.getLocation());
+        Long driverId = liveUpdateEntity.getId().getDriverId();
+        return new LocationEntity(driverId, liveUpdateEntity.getLocation());
     }
 
     // Usage of .parallelStream to be studied.

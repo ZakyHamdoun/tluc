@@ -24,35 +24,20 @@ public class LiveUpdateMapper {
         return new LiveUpdateModel(
                 liveUpdateRequestDto.getTimestamp(),
                 liveUpdateRequestDto.getDriverId(),
-                liveUpdateRequestDto.getDriverStatus(),
                 location,
                 liveUpdateRequestDto.getSpeed()
         );
     }
 
     public static LiveUpdateEntity liveUpdateModelToLiveUpdateEntity(LiveUpdateModel liveUpdateModel) {
+        LiveUpdateEntity.LiveUpdateId liveUpdateId = new LiveUpdateEntity.LiveUpdateId();
+        liveUpdateId.setDriverId(liveUpdateModel.driverId());
+        liveUpdateId.setTimestamp(liveUpdateModel.timestamp());
         LiveUpdateEntity liveUpdateEntity = new LiveUpdateEntity();
-        liveUpdateEntity.setTimestamp(liveUpdateModel.timestamp());
-        liveUpdateEntity.setDriverId(liveUpdateModel.driverId());
-        liveUpdateEntity.setDriverStatus(liveUpdateModel.driverStatus());
+        liveUpdateEntity.setId(liveUpdateId);
         liveUpdateEntity.setLocation(liveUpdateModel.location());
         liveUpdateEntity.setSpeed(liveUpdateModel.speed());
 
         return liveUpdateEntity;
-    }
-
-    /**
-     * Convert Object[] from native queries to LiveUpdateEntity
-     * Used for PostGIS function results
-     */
-    public static LiveUpdateEntity objectArrayToLiveUpdateEntity(Object[] row) {
-        LiveUpdateEntity entity = new LiveUpdateEntity();
-        entity.setId((Long) row[0]);
-        entity.setTimestamp((java.time.Instant) row[1]);
-        entity.setDriverId((Long) row[2]);
-        entity.setDriverStatus(com.taxinopli.tluc.enumeration.DriverStatus.valueOf((String) row[3]));
-        entity.setLocation((Point) row[4]);
-        entity.setSpeed((Double) row[5]);
-        return entity;
     }
 }

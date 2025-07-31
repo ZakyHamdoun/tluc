@@ -19,7 +19,7 @@ public class LocationResponseDto {
     @Schema(description = "Center's coordinate.",
             requiredMode = Schema.RequiredMode.REQUIRED,
             example = """
-                    {"longitude": 2.2120929, "latitude": 48.8583764}
+                    {"longitude": 2.294481, "latitude": 48.858370}
                     """)
     @NotNull(message = "coordinate is required.")
     private @Valid CoordinateDto coordinate;

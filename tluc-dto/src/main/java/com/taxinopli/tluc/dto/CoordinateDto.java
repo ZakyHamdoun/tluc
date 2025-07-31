@@ -5,10 +5,12 @@ import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Schema(description = "A coordinate.", name = "Coordinate")
 @AllArgsConstructor
+@NoArgsConstructor
 public class CoordinateDto {
     @Schema(description = "Longitude", requiredMode = Schema.RequiredMode.REQUIRED)
     @DecimalMin(value = "-180.0")

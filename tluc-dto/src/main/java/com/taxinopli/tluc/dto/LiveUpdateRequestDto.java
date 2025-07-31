@@ -1,16 +1,19 @@
 package com.taxinopli.tluc.dto;
 
-import com.taxinopli.tluc.enumeration.DriverStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 
 @Data
 @Schema(description = "A live update.", name = "LiveUpdateInput")
+@AllArgsConstructor
+@NoArgsConstructor
 public class LiveUpdateRequestDto {
     @Schema(description = "Live update's timestamp.",
             requiredMode = Schema.RequiredMode.REQUIRED,
@@ -20,20 +23,14 @@ public class LiveUpdateRequestDto {
 
     @Schema(description = "Live update's corresponding driver's UUID.",
             requiredMode = Schema.RequiredMode.REQUIRED,
-            example = "22555")
+            example = "1")
     @NotNull(message = "driverId is required.")
     private Long driverId;
-
-    @Schema(description = "Live update's corresponding driver's status.",
-            requiredMode = Schema.RequiredMode.REQUIRED,
-            example = "OCCUPIED")
-    @NotNull(message = "driverStatus is required")
-    private DriverStatus driverStatus;
 
     @Schema(description = "Live update's coordinate.",
             requiredMode = Schema.RequiredMode.REQUIRED,
             example = """
-                    {"longitude": 2.2120929, "latitude": 48.8583764}
+                    {"longitude": 2.294481, "latitude": 48.858370}
                     """)
     @NotNull(message = "coordinate is required.")
     private @Valid CoordinateDto coordinate;

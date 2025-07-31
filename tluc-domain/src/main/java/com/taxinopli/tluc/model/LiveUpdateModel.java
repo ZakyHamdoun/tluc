@@ -8,7 +8,6 @@ import java.time.Instant;
 public record LiveUpdateModel(
         Instant timestamp,
         Long driverId,
-        DriverStatus driverStatus,
         Point location,
         Double speed
 ) {}

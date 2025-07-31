@@ -14,8 +14,8 @@ public class DriversInPolyRequestDto {
     @Schema(description = "List of points forming the polygon. Must contain at least 3 points.",
             requiredMode = Schema.RequiredMode.REQUIRED,
             example = """
-                    [{"longitude": 2.34, "latitude": 48.84}, {"longitude": 2.34, "latitude": 48.84},
-                    {"longitude": 2.34, "latitude": 48.84}]
+                    [{"longitude": 2.294481, "latitude": 48.858370}, {"longitude": 2.294481, "latitude": 48.858370},
+                    {"longitude": 2.294481, "latitude": 48.858370}]
                     """)
     @NotNull(message = "poly points are required.")
     @Size(min = 3, message = "At least 3 points are required to form a polygon.")

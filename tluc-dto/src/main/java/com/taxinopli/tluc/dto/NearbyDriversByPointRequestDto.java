@@ -14,7 +14,7 @@ import lombok.Data;
 public class NearbyDriversByPointRequestDto {
     @Schema(description = "Center's coordinate.",
             requiredMode = Schema.RequiredMode.REQUIRED,
-            example = "{2.2120929, 48.8583764}")
+            example = "{2.294481, 48.858370}")
     @NotNull(message = "coordinate is required.")
     private @Valid CoordinateDto coordinate;
 

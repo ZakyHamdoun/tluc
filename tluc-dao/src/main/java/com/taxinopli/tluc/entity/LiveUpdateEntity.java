@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.locationtech.jts.geom.Point;
 
+import java.io.Serializable;
 import java.time.Instant;
 
 @Entity
@@ -14,16 +15,8 @@ import java.time.Instant;
 @Getter
 @Setter
 public final class LiveUpdateEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
-
-    @Column(name = "timestamp", nullable = false, columnDefinition = "TIMESTAMPTZ")
-    private Instant timestamp;
-
-    @Column(name = "driver_id", nullable = false)
-    private Long driverId;
+    @EmbeddedId
+    private LiveUpdateId id;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "driver_status", nullable = false)
@@ -34,4 +27,16 @@ public final class LiveUpdateEntity {
 
     @Column(name = "speed", nullable = false)
     private Double speed;
+
+    @Embeddable
+    @Getter
+    @Setter
+    @EqualsAndHashCode
+    public static class LiveUpdateId implements Serializable {
+        @Column(name = "driver_id", nullable = false)
+        private Long driverId;
+
+        @Column(name = "timestamp", nullable = false, columnDefinition = "TIMESTAMPTZ")
+        private Instant timestamp;
+    }
 }
