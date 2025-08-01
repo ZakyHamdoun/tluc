@@ -1,0 +1,93 @@
+package com.taxinopli.tluc.repository;
+
+import com.taxinopli.tluc.entity.LiveUpdateEntity;
+import org.locationtech.jts.geom.Polygon;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import java.time.Instant;
+import java.util.List;
+
+@Repository
+public interface DurationRepository extends JpaRepository<LiveUpdateEntity, Long> {
+    @Query(value = """
+        WITH filtered AS (
+            SELECT driver_id, timestamp, driver_status, location, speed
+            FROM tluc.live_updates
+            WHERE
+                timestamp BETWEEN :from AND :till
+                AND ST_DWithin(
+                    location,
+                    ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326)::geography,
+                    :radius
+                )
+                AND (:driverStatus IS NULL OR driver_status = :driverStatus)
+                AND (:minSpeed IS NULL OR speed >= :minSpeed)
+                AND (:maxSpeed IS NULL OR speed <= :maxSpeed)
+        ),
+        durations AS (
+            SELECT
+                driver_id,
+                MIN(timestamp) AS first_seen,
+                MAX(timestamp) AS last_seen,
+                EXTRACT(EPOCH FROM (MAX(timestamp) - MIN(timestamp)))::bigint AS duration,
+                AVG(speed) as average_speed
+            FROM filtered
+            GROUP BY driver_id
+        )
+        SELECT *
+        FROM durations
+        WHERE duration >= :duration;
+        """,
+            nativeQuery = true
+    )
+    List<Object[]> findNearbyDriversByPointDuration(
+            @Param("longitude") double longitude,
+            @Param("latitude") double latitude,
+            @Param("radius") double radius,
+            @Param("from") Instant from,
+            @Param("till") Instant till,
+            @Param("duration") Long duration,
+            @Param("driverStatus") String driverStatus,
+            @Param("minSpeed") Double minSpeed,
+            @Param("maxSpeed") Double maxSpeed);
+
+    @Query(value = """
+        WITH filtered AS (
+            SELECT driver_id, timestamp, driver_status, location, speed
+            FROM tluc.live_updates
+            WHERE
+                timestamp BETWEEN :from AND :till
+                AND ST_Contains(:polygon, location)
+                AND (:driverStatus IS NULL OR driver_status = :driverStatus)
+                AND (:minSpeed IS NULL OR speed >= :minSpeed)
+                AND (:maxSpeed IS NULL OR speed <= :maxSpeed)
+        ),
+        durations AS (
+            SELECT
+                driver_id,
+                MIN(timestamp) AS first_seen,
+                MAX(timestamp) AS last_seen,
+                EXTRACT(EPOCH FROM (MAX(timestamp) - MIN(timestamp)))::bigint AS duration,
+                AVG(speed) as average_speed
+            FROM filtered
+            GROUP BY driver_id
+        )
+        SELECT *
+        FROM durations
+        WHERE duration >= :duration;
+        """,
+            nativeQuery = true
+    )
+    List<Object[]> findDriversInPolygonDuration(
+            @Param("polygon") Polygon polygon,
+            @Param("from") Instant from,
+            @Param("till") Instant till,
+            @Param("duration") Long duration,
+            @Param("driverStatus") String driverStatus,
+            @Param("minSpeed") Double minSpeed,
+            @Param("maxSpeed") Double maxSpeed
+    );
+}

@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
+import java.time.Instant;
 import java.util.List;
 
 @Data
@@ -21,13 +22,17 @@ public class DriversInPolyRequestDto {
     @Size(min = 3, message = "At least 3 points are required to form a polygon.")
     private List<@Valid CoordinateDto> poly;
 
-    @Schema(description = "Maximum Age (min).",
+    @Schema(description = "From (Time-zoned timestamp).",
             requiredMode = Schema.RequiredMode.REQUIRED,
-            example = "5")
-    @NotNull(message = "maximum age is required.")
-    @DecimalMin(value = "1", message = "maximum age must be >= 1")
-    @DecimalMax(value = "1440", message = "maximum age must be <= 1440")
-    private double maximumAge;
+            example = "2025-07-21 14:30:45+02")
+    @NotNull(message = "from is required.")
+    private Instant from;
+
+    @Schema(description = "Till (Time-zoned timestamp).",
+            requiredMode = Schema.RequiredMode.REQUIRED,
+            example = "2025-07-21 14:30:45+02")
+    @NotNull(message = "till is required.")
+    private Instant till;
 
     @Schema(description = "Filter by driver status.",
             requiredMode = Schema.RequiredMode.NOT_REQUIRED,

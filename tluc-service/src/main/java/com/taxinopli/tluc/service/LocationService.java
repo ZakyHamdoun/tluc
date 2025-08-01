@@ -31,7 +31,8 @@ public class LocationService {
                 nearbyDriversByPointRequestDto.getCoordinate().getLongitude(),
                 nearbyDriversByPointRequestDto.getCoordinate().getLatitude(),
                 nearbyDriversByPointRequestDto.getRadius(),
-                nearbyDriversByPointRequestDto.getMaximumAge(),
+                nearbyDriversByPointRequestDto.getFrom(),
+                nearbyDriversByPointRequestDto.getTill(),
                 nearbyDriversByPointRequestDto.getDriverStatus().name(),
                 nearbyDriversByPointRequestDto.getMinSpeed(),
                 nearbyDriversByPointRequestDto.getMaxSpeed()
@@ -52,7 +53,8 @@ public class LocationService {
         Polygon polygon = GeometryUtils.GEOMETRY_FACTORY.createPolygon(polyCoordinates);
         List<LiveUpdateEntity> liveUpdateEntities = locationRepository.findDriversInPolygon(
                 polygon,
-                driversInPolyRequestDto.getMaximumAge(),
+                driversInPolyRequestDto.getFrom(),
+                driversInPolyRequestDto.getTill(),
                 driversInPolyRequestDto.getDriverStatus().name(),
                 driversInPolyRequestDto.getMinSpeed(),
                 driversInPolyRequestDto.getMaxSpeed()

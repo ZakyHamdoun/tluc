@@ -9,6 +9,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Data;
 
+import java.time.Instant;
+
 @Data
 @Schema(description = "A request for nearby drivers location update.", name = "NearbyDriversInput")
 public class NearbyDriversByPointRequestDto {
@@ -26,13 +28,17 @@ public class NearbyDriversByPointRequestDto {
     @DecimalMax(value = "5000", message = "radius must be <= 5000")
     private double radius;
 
-    @Schema(description = "Maximum Age (min).",
+    @Schema(description = "From (Time-zoned timestamp).",
             requiredMode = Schema.RequiredMode.REQUIRED,
-            example = "5")
-    @NotNull(message = "maximum age is required.")
-    @DecimalMin(value = "1", message = "maximum age must be >= 1")
-    @DecimalMax(value = "1440", message = "maximum age must be <= 1440")
-    private double maximumAge;
+            example = "2025-07-21 14:30:45+02")
+    @NotNull(message = "from is required.")
+    private Instant from;
+
+    @Schema(description = "Till (Time-zoned timestamp).",
+            requiredMode = Schema.RequiredMode.REQUIRED,
+            example = "2025-07-21 14:30:45+02")
+    @NotNull(message = "till is required.")
+    private Instant till;
 
     @Schema(description = "Filter by driver status.",
             requiredMode = Schema.RequiredMode.NOT_REQUIRED,
