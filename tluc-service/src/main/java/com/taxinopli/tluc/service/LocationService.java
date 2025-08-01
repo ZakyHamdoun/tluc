@@ -5,16 +5,18 @@ import com.taxinopli.tluc.dto.LocationResponseDto;
 import com.taxinopli.tluc.dto.NearbyDriversByPointRequestDto;
 import com.taxinopli.tluc.entity.LiveUpdateEntity;
 import com.taxinopli.tluc.entity.LocationEntity;
+import com.taxinopli.tluc.geometry.GeometryUtils;
 import com.taxinopli.tluc.mapper.LocationMapper;
 import com.taxinopli.tluc.model.LocationModel;
 import com.taxinopli.tluc.repository.LocationRepository;
 import lombok.RequiredArgsConstructor;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Polygon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,11 +32,10 @@ public class LocationService {
                 nearbyDriversByPointRequestDto.getCoordinate().getLatitude(),
                 nearbyDriversByPointRequestDto.getRadius(),
                 nearbyDriversByPointRequestDto.getMaximumAge(),
-                nearbyDriversByPointRequestDto.getDriverStatus(),
+                nearbyDriversByPointRequestDto.getDriverStatus().name(),
                 nearbyDriversByPointRequestDto.getMinSpeed(),
                 nearbyDriversByPointRequestDto.getMaxSpeed()
         );
-
         List<LocationEntity> locationEntities = LocationMapper.liveUpdateEntitiesToLocationEntities(liveUpdateEntities);
         List<LocationModel> locationModels = LocationMapper.locationEntitiesToLocationModels(locationEntities);
 
@@ -45,17 +46,17 @@ public class LocationService {
     @Transactional(readOnly = true)
     public List<LocationResponseDto> getDriversInPolygon(
             DriversInPolyRequestDto driversInPolyRequestDto) {
-        String pointArray = driversInPolyRequestDto.getPoly().stream()
-                .map(c -> "ST_MakePoint(" + c.getLongitude() + ", " + c.getLongitude() + ")")
-                .collect(Collectors.joining(", "));
+        Coordinate[] polyCoordinates = driversInPolyRequestDto.getPoly().stream()
+                .map(p -> new Coordinate(p.getLongitude(), p.getLatitude()))
+                .toArray(Coordinate[]::new);
+        Polygon polygon = GeometryUtils.GEOMETRY_FACTORY.createPolygon(polyCoordinates);
         List<LiveUpdateEntity> liveUpdateEntities = locationRepository.findDriversInPolygon(
-                pointArray,
+                polygon,
                 driversInPolyRequestDto.getMaximumAge(),
-                driversInPolyRequestDto.getDriverStatus(),
+                driversInPolyRequestDto.getDriverStatus().name(),
                 driversInPolyRequestDto.getMinSpeed(),
                 driversInPolyRequestDto.getMaxSpeed()
         );
-
         List<LocationEntity> locationEntities = LocationMapper.liveUpdateEntitiesToLocationEntities(liveUpdateEntities);
         List<LocationModel> locationModels = LocationMapper.locationEntitiesToLocationModels(locationEntities);
 

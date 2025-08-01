@@ -36,18 +36,18 @@ public class NearbyDriversByPointRequestDto {
 
     @Schema(description = "Filter by driver status.",
             requiredMode = Schema.RequiredMode.NOT_REQUIRED,
-            example = "OCCUPIED")
+            example = "OCCUPIED", defaultValue = "null")
     private DriverStatus driverStatus;
 
     @Schema(description = "Filter by minimum speed (km/h).",
             requiredMode = Schema.RequiredMode.NOT_REQUIRED,
-            example = "30")
+            example = "30", defaultValue = "null")
     @PositiveOrZero(message = "minSpeed must be either zero, positive or null")
     private Double minSpeed;
 
     @Schema(description = "Filter by maximum speed (km/h).",
             requiredMode = Schema.RequiredMode.NOT_REQUIRED,
-            example = "30")
+            example = "30", defaultValue = "null")
     @PositiveOrZero(message = "maxSpeed must be either zero, positive or null")
     private Double maxSpeed;
 }

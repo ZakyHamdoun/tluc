@@ -13,13 +13,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,6 +27,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping(path = LocationController.LOCATION_MAPPING, produces = APPLICATION_JSON_VALUE)
 @Tag(name = "3. Location", description = "All needed operations for location operations.")
 @RequiredArgsConstructor
+@Slf4j
 public class LocationController {
     static final String LOCATION_MAPPING = "/location";
     private static final String BY_POINT_MAPPING = "/point";
@@ -37,7 +36,7 @@ public class LocationController {
     @Autowired
     private final LocationService locationService;
 
-    @GetMapping(path = BY_POINT_MAPPING, produces = APPLICATION_JSON_VALUE)
+    @PostMapping(path = BY_POINT_MAPPING, produces = APPLICATION_JSON_VALUE)
     @Operation(operationId = "location1", summary = "Get nearby drivers from point.",
             description = "Returns a list of nearby drivers locations around coordinates.")
     @ApiResponses(value = {
@@ -60,7 +59,7 @@ public class LocationController {
          */
     }
 
-    @GetMapping(path = IN_POLY_MAPPING, produces = APPLICATION_JSON_VALUE)
+    @PostMapping(path = IN_POLY_MAPPING, produces = APPLICATION_JSON_VALUE)
     @Operation(operationId = "location2", summary = "Get drivers in poly.",
             description = "Returns a list of drivers locations in a polygon.")
     @ApiResponses(value = {
