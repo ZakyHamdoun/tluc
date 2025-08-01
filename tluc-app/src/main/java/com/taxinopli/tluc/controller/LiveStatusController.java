@@ -4,6 +4,8 @@ import com.taxinopli.tluc.constant.ResponseStatusHttp;
 import com.taxinopli.tluc.dto.LiveStatusRequestDto;
 import com.taxinopli.tluc.dto.LocationResponseDto;
 import com.taxinopli.tluc.service.LiveStatusService;
+import com.taxinopli.tluc.service.LiveStatusService.DriverStatusInfo;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
@@ -32,6 +35,28 @@ public class LiveStatusController {
     @Autowired
     private final LiveStatusService liveStatusService;
 
+    @GetMapping(path = BY_ID_MAPPING, produces = APPLICATION_JSON_VALUE)
+    @Operation(operationId = "getStatus", summary = "Get driver status by ID.",
+            description = "Retrieve a driver's current status and ride ID from cache.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Status retrieved successfully.",
+                    content = @Content(mediaType = APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = DriverStatusInfo.class))),
+            @ApiResponse(responseCode = "404", description = "Driver status not found",
+                    content = @Content),
+            @ApiResponse(responseCode = "400", description = ResponseStatusHttp.HTTP_BAD_REQUEST,
+                    content = @Content)
+    })
+    public ResponseEntity<DriverStatusInfo> getDriverStatus(@PathVariable @Valid Long driverId) {
+        Optional<DriverStatusInfo> statusInfo = liveStatusService.getDriverStatus(driverId);
+        
+        if (statusInfo.isPresent()) {
+            return ResponseEntity.ok(statusInfo.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PutMapping(path = BY_ID_MAPPING, produces = APPLICATION_JSON_VALUE)
     @Operation(operationId = "status1", summary = "Update status using ID.",
             description = "Update a driver's status using his ID.")
@@ -44,10 +69,10 @@ public class LiveStatusController {
             @ApiResponse(responseCode = "401", description = ResponseStatusHttp.HTTP_UNAUTHORIZED,
                     content = @Content)
     })
-    public ResponseEntity<List<LocationResponseDto>> updateDriverStatus(
+    public ResponseEntity<List<LocationResponseDto>> updateDriver(
             @PathVariable @Valid Long driverId,
             @RequestBody @Valid LiveStatusRequestDto liveStatusRequestDto) {
-        liveStatusService.updateLiveStatus(driverId, liveStatusRequestDto);
+        liveStatusService.updateDriverStatus(driverId, liveStatusRequestDto);
         return new ResponseEntity<>(HttpStatus.OK);
         /*
          * Bad Request: caught at input validation by annotations.

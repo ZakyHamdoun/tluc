@@ -8,10 +8,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public enum DriverStatus {
     OCCUPIED,
     FREE,
-    AVAILABLE,  // Added for test compatibility
+    AVAILABLE,
     APPROACHING,
     INACTIVE,
-    BUSY;  // Added for load test compatibility
+    BUSY;
 
     @JsonCreator
     public static DriverStatus fromString(String key) {

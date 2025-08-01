@@ -13,4 +13,9 @@ public class LiveStatusRequestDto {
             example = "OCCUPIED")
     @NotNull(message = "driverStatus is required")
     private DriverStatus driverStatus;
+    
+    @Schema(description = "Driver's current ride ID",
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED,
+            example = "12345")
+    private Long driverRideId;
 }

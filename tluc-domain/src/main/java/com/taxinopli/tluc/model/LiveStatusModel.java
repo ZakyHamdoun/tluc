@@ -4,5 +4,6 @@ import com.taxinopli.tluc.enumeration.DriverStatus;
 
 public record LiveStatusModel(
         Long driverId,
-        DriverStatus driverStatus
+        DriverStatus driverStatus,
+        Long driverRideId
 ) {}

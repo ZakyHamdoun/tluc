@@ -13,7 +13,11 @@ public class LiveStatusMapper {
 
     public static LiveStatusModel liveStatusRequestDtoToLiveStatusModel(
             Long driverId, LiveStatusRequestDto liveStatusRequestDto) {
-        return new LiveStatusModel(driverId, liveStatusRequestDto.getDriverStatus());
+        return new LiveStatusModel(
+                driverId, 
+                liveStatusRequestDto.getDriverStatus(),
+                liveStatusRequestDto.getDriverRideId()
+        );
     }
 
     public static LiveStatusEntity liveStatusModelToLiveStatusEntity(LiveStatusModel liveStatusModel) {
