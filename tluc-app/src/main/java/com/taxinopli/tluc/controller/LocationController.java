@@ -25,7 +25,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping(path = LocationController.LOCATION_MAPPING, produces = APPLICATION_JSON_VALUE)
-@Tag(name = "3. Location", description = "All needed operations for location operations.")
+@Tag(name = "3. Location", description = "All needed endpoints for location operations.")
 @RequiredArgsConstructor
 @Slf4j
 public class LocationController {

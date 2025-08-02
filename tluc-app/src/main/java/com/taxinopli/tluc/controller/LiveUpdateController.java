@@ -20,7 +20,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping(path = LiveUpdateController.UPDATE_MAPPING)
-@Tag(name = "1. Live Update", description = "Everything related to live updates.")
+@Tag(name = "1. Live Update", description = "All needed endpoints for live updates operations.")
 @RequiredArgsConstructor
 @Slf4j
 public class LiveUpdateController {

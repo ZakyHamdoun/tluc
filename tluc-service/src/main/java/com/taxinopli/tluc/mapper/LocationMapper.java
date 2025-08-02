@@ -17,7 +17,10 @@ public class LocationMapper {
 
     public static LocationEntity liveUpdateEntityToLocationEntity(LiveUpdateEntity liveUpdateEntity) {
         Long driverId = liveUpdateEntity.getId().getDriverId();
-        return new LocationEntity(driverId, liveUpdateEntity.getLocation());
+        return new LocationEntity(
+                driverId,
+                liveUpdateEntity.getId().getTimestamp(),
+                liveUpdateEntity.getLocation());
     }
 
     // Usage of .parallelStream to be studied.
@@ -32,7 +35,10 @@ public class LocationMapper {
     }
 
     public static LocationModel locationEntityToLocationModel(LocationEntity locationEntity) {
-        return new LocationModel(locationEntity.getDriverId(), locationEntity.getLocation());
+        return new LocationModel(
+                locationEntity.getDriverId(),
+                locationEntity.getTimestamp(),
+                locationEntity.getLocation());
     }
 
     public static List<LocationModel> locationEntitiesToLocationModels(
@@ -50,6 +56,7 @@ public class LocationMapper {
                 locationModel.location().getX(), locationModel.location().getY());
         return new LocationResponseDto(
                 locationModel.driverId(),
+                locationModel.timestamp(),
                 coordinateDto);
     }
 

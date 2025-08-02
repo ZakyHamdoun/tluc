@@ -23,7 +23,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping(path = LiveDriverController.DRIVER_MAPPING, produces = APPLICATION_JSON_VALUE)
-@Tag(name = "2. Driver", description = "All needed operations for driver's information updates.")
+@Tag(name = "2. Driver", description = "All needed endpoints for driver's information updates.")
 @RequiredArgsConstructor
 public class LiveDriverController {
     static final String DRIVER_MAPPING = "/driver";

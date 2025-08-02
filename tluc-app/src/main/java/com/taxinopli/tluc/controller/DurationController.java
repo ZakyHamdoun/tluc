@@ -26,7 +26,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping(path = DurationController.DURATION_MAPPING, produces = APPLICATION_JSON_VALUE)
-@Tag(name = "4. Duration", description = "All needed operations for duration operations.")
+@Tag(name = "4. Duration", description = "All needed endpoints for duration operations.")
 @RequiredArgsConstructor
 @Slf4j
 public class DurationController {

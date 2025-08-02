@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.time.Instant;
+
 @Data
 @Schema(description = "A location response.", name = "LocationOutput")
 @AllArgsConstructor
@@ -16,7 +18,13 @@ public class LocationResponseDto {
     @NotNull(message = "driverId is required.")
     private Long driverId;
 
-    @Schema(description = "Center's coordinate.",
+    @Schema(description = "Location's timestamp.",
+            requiredMode = Schema.RequiredMode.REQUIRED,
+            example = "2025-07-21T12:30:45Z")
+    @NotNull(message = "timestamp is required.")
+    private Instant timestamp;
+
+    @Schema(description = "Location's coordinate.",
             requiredMode = Schema.RequiredMode.REQUIRED,
             example = """
                     {"longitude": 2.294481, "latitude": 48.858370}
