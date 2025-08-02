@@ -1,11 +1,11 @@
 package com.taxinopli.tluc.service;
 
 import com.taxinopli.tluc.dto.LiveUpdateRequestDto;
-import com.taxinopli.tluc.entity.LiveStatusEntity;
+import com.taxinopli.tluc.entity.LiveDriverEntity;
 import com.taxinopli.tluc.entity.LiveUpdateEntity;
 import com.taxinopli.tluc.mapper.LiveUpdateMapper;
 import com.taxinopli.tluc.model.LiveUpdateModel;
-import com.taxinopli.tluc.repository.LiveStatusRepository;
+import com.taxinopli.tluc.repository.LiveDriverRepository;
 import com.taxinopli.tluc.repository.LiveUpdateRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ public class LiveUpdateConsumerService {
     private final LiveUpdateRepository liveUpdateRepository;
 
     @Autowired
-    private final LiveStatusRepository liveStatusRepository;
+    private final LiveDriverRepository liveDriverRepository;
 
     /**
      * Core business logic: Process location update
@@ -39,17 +39,18 @@ public class LiveUpdateConsumerService {
     public void consumeLiveUpdate(LiveUpdateRequestDto liveUpdateRequestDto) {
         log.debug("Processing taxi location update for driver: {}", liveUpdateRequestDto.getDriverId());
         LiveUpdateModel liveUpdateModel = LiveUpdateMapper.liveUpdateRequestDtoToLiveUpdateModel(liveUpdateRequestDto);
-        LiveStatusEntity liveStatusEntity = liveStatusRepository
+        LiveDriverEntity liveDriverEntity = liveDriverRepository
                 .findById(liveUpdateModel.driverId())
                 .orElse(null);
 
-        if (liveStatusEntity == null) {
-            log.error("Live Update Consumer: driverStatus not found by driverId {}", liveUpdateModel.driverId());
+        if (liveDriverEntity == null) {
+            log.error("Live Update Consumer: liveDriver not found by driverId {}", liveUpdateModel.driverId());
             return;
         }
 
         LiveUpdateEntity liveUpdateEntity = LiveUpdateMapper.liveUpdateModelToLiveUpdateEntity(liveUpdateModel);
-        liveUpdateEntity.setDriverStatus(liveStatusEntity.getDriverStatus());
+        liveUpdateEntity.setDriverStatus(liveDriverEntity.getDriverStatus());
+        liveUpdateEntity.setRideId(liveDriverEntity.getRideId());
         liveUpdateRepository.save(liveUpdateEntity);
     }
 }

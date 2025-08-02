@@ -2,7 +2,8 @@ package com.taxinopli.tluc.model;
 
 import com.taxinopli.tluc.enumeration.DriverStatus;
 
-public record LiveStatusModel(
+public record LiveDriverModel(
         Long driverId,
-        DriverStatus driverStatus
+        DriverStatus driverStatus,
+        Long rideId
 ) {}

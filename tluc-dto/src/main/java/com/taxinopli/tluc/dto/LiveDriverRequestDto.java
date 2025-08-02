@@ -6,11 +6,16 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-@Schema(description = "A live status.", name = "LiveStatusInput")
-public class LiveStatusRequestDto {
-    @Schema(description = "Live update's corresponding driver's status.",
+@Schema(description = "A live driver.", name = "LiveDriverInput")
+public class LiveDriverRequestDto {
+    @Schema(description = "Live driver's status.",
             requiredMode = Schema.RequiredMode.REQUIRED,
             example = "OCCUPIED")
     @NotNull(message = "driverStatus is required")
     private DriverStatus driverStatus;
+
+    @Schema(description = "Live driver's ride id.",
+            requiredMode = Schema.RequiredMode.NOT_REQUIRED,
+            example = "1")
+    private Long rideId;
 }

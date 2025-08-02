@@ -28,6 +28,9 @@ public final class LiveUpdateEntity {
     @Column(name = "speed", nullable = false)
     private Double speed;
 
+    @Column(name = "ride_id", nullable = false)
+    private Long rideId;
+
     @Embeddable
     @Getter
     @Setter
